@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,16 +19,18 @@ class ImageDisplayFragment : Fragment() {
 
     private lateinit var images: IntArray
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // If we have arguments
-        arguments?.let { it ->
-            // If we find the specific argument
-            it.getIntArray(IMAGES_KEY)?.let {
-                images = it
-            }
-        }
-    }
+
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        // If we have arguments
+//        arguments?.let { it ->
+//            // If we find the specific argument
+//            it.getIntArray(IMAGES_KEY)?.let {
+//                images = it
+//            }
+//        }
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // The inflated layout file is returned to the parent/host and displayed to the user
@@ -40,9 +43,8 @@ class ImageDisplayFragment : Fragment() {
         // The recycler view is the root element of the Fragment's layout
         // as such the view argument passed to onViewCreated() is the RecyclerView
         with (view as RecyclerView) {
-            if(::images.isInitialized)
-                adapter = CustomRecyclerAdapter(images)
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            ViewModelProvider(requireActivity())[ImagesViewModel::class.java]
+                .getImages().observe(viewLifecycleOwner)
         }
     }
 
